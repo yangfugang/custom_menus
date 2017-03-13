@@ -1,0 +1,4 @@
+# progress_upload
+基于Nginx的Drupal8上传进度模块
+用于实现Drupal8的文件上传进度，以及上传较大文件的性能提升。基于Nginx的upload和uploadprogress模块实现。
+关于Nginx的配置文件，在我的另一个online_education项目里。
