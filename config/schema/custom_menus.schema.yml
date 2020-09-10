@@ -1,0 +1,11 @@
+seo.config:
+  type: config_object
+  label: 'Site keywords'
+  mapping:
+    keywords:
+      type: label
+      label: 'Site keys'
+
+banner.config.*:
+  type: config_object
+

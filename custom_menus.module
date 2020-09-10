@@ -1,0 +1,170 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+
+/**
+ * @param $vars
+ * hook_preprocess_HOOK
+ * 调用theme_hook，修改模板用到的变量
+ */
+function custom_menus_preprocess_toolbar(&$vars) {
+  $user = \Drupal::currentUser();
+  // 获取所有内容类型的配置名称
+  $config_names = \Drupal::configFactory()->listAll('node.type.');
+  // 遍历内容类型，获取配置
+  foreach($config_names as $config_name) {
+    $sp = explode('.', $config_name);
+    $bundle_machine_name = end($sp);
+    if($bundle_machine_name != 'settings') {
+      // 加载内容类型的配置信息
+      $bundle_config = \Drupal::config($config_name);
+      $bundle_name = $bundle_config->get('name');
+      $parent_menu = $bundle_config->get('third_party_settings')['menu_ui']['parent'];
+    }
+  }
+  $user->hasPermission('xxx');
+}
+
+function getNodes() {
+  $query = \Drupal::entityQuery('node');
+  $query->condition('type', 'xxxx');
+  $query->condition('xx', 'yy');
+  $nids = $query->execute();
+
+}
+
+/**
+ * Implement hook_form_FORM_ID_alter
+ * @param $form
+ * @param FormStateInterface $form_state
+ * @param $form_id
+ */
+function custom_menus_form_system_site_information_settings_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $seo_config = \Drupal::config('seo.config');
+  $form['site_information']['site_keys'] = [
+    '#type' => 'textfield',
+    '#title' => t('Keywords'),
+    '#default_value' => $seo_config->get('keywords'),
+    '#required' => TRUE,
+
+  ];
+  $form['site_information']['actions'] = array(
+    'add_more' => array(
+      '#type' => 'submit',
+      '#value' => t('Add one'),
+      '#submit' => array('modulename_add_more_add_one'),
+    )
+  );
+
+  $form['#submit'][] = 'save_seo_config';
+}
+
+function save_seo_config(&$form, FormStateInterface $form_state) {
+  $keys = $form_state->getValue('site_keys');
+  $seo_config = \Drupal::configFactory()->getEditable('seo.config');
+  $seo_config->set('keywords', $keys)->save(TRUE);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function custom_menus_theme($existing, $type, $theme, $path)
+{
+  return array(
+    'custombar' => array(
+      'render element' => 'element',
+    )
+  );
+}
+
+/**
+ * Implements hook_page_top().
+ *
+ * 添加自定义菜单到页面顶部.
+ */
+function custom_menus_page_top(array &$page_top) {
+  /*$page_top['custombar'] = [
+    '#type' => 'custombar',
+    '#access' => \Drupal::currentUser()->hasPermission('access custombar'),
+    '#cache' => [
+      'keys' => ['custombar'],
+      'contexts' => ['user.permissions'],
+    ],
+  ];*/
+}
+
+/**
+ * Implements hook_custombar().
+ * 为自定义管理菜单设置节点
+ */
+function custom_menus_custombar()
+{
+  $user = \Drupal::currentUser();
+  // 加载管理菜单
+  $items = \Drupal::service('custom_menus.general')->getMenuItems('admin');
+
+  // 获取所有内容类型的配置名称
+  $config_names = \Drupal::configFactory()->listAll('node.type.');
+  // 遍历内容类型，获取配置
+  foreach($config_names as $config_name) {
+    // 获取内容类型的机读名称
+    $sp = explode('.', $config_name);
+    $bundle_machine_name = end($sp);
+
+    // 加载内容类型的配置信息
+    $bundle_config = \Drupal::config($config_name);
+    // 获取内容类型的名称
+    $bundle_name = $bundle_config->get('name');
+    // 获取当前类型设置的默认上级菜单
+    $parent_menu = $bundle_config->get('third_party_settings')['menu_ui']['parent'];
+    $temp_arr = explode(':', $parent_menu);
+    $parent_key = end($temp_arr);
+    // 根据内容类型创建URL
+    $bundel_url = Url::fromRoute('system.admin_content', array('type' => $bundle_machine_name));
+
+    if(isset($items['system.admin']['items'][$parent_key])) {
+      // 检查用户是否有创建该内容类型的权限
+      if(!$user->hasPermission("create " . $bundle_machine_name . " content")) continue;
+      $items['system.admin']['items'][$parent_key]['items'][] = array(
+        'title' => $bundle_name,
+        'url' => $bundel_url->toUriString(),
+        'level' => $items['system.admin']['items'][$parent_key]['level'] + 1,
+        'attributes' => array(
+          'class' => array()
+        )
+      );
+    }
+  }
+
+  //$user->hasPermission('xxx');
+
+  return $items;
+}
+
+/**
+ * Implements hook_cron().
+ */
+function custom_menus_cron()
+{
+  \Drupal::logger('custom_menus')->notice('当前时间：' . date('H:i:s', time()));
+}
+
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function custom_menus_form_views_form_content_page_1_alter(&$form, FormStateInterface $form_state, $form_id)
+{
+  $a = 'b';
+}
+
+
+
+
+function custom_menus_form_node_article_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+
+  $c = \Drupal::config('taxonomy.vocabulary.tags')->get('name');
+
+}

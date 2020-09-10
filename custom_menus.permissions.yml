@@ -1,0 +1,8 @@
+manage site banners:
+  title: 'Manage site banners'
+  description: 'Manage site page top banner.'
+  restrict access: TRUE
+access custombar:
+  title: 'Access custom toobar'
+  description: '使用自定义导航菜单.'
+  restrict access: TRUE

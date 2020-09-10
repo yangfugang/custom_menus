@@ -1,6 +1,0 @@
-progress_field.progress:
-  path: '/file/nginx-progress/{key}'
-  defaults:
-    _controller: '\Drupal\progress_field\Controller\ProgressFieldController::progress'
-  requirements:
-    _permission: 'access content'

@@ -1,7 +1,0 @@
-name: Progress Field
-type: module
-description: 基于Nginx uploadprogress实现的上传文件进度条
-core: 8.x
-package: Custom
-dependencies:
-  - file

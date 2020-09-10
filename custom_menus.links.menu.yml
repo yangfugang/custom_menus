@@ -1,0 +1,6 @@
+custom.manage_banners:
+  title: 'Manage Site Banners'
+  parent: system.admin_config_system
+  description: 'Manage Site Banners'
+  route_name: custom_menus.banner_settings
+  weight: 0

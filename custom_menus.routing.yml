@@ -1,0 +1,15 @@
+custom_menus.banner_settings:
+  path: '/admin/config/system/banners'
+  defaults:
+    _form: '\Drupal\custom_menus\Form\CustomMenusBannerForm'
+    _title: 'Mange Site Banners'
+  requirements:
+    _permission: 'manage site banners'
+
+custom_menus.check_translation:
+  path: '/check/t'
+  defaults:
+    _controller: '\Drupal\custom_menus\Controller\QueryNodeController::checkState'
+    _title: '检查翻译状态'
+  requirements:
+    _permission: 'manage site banners'

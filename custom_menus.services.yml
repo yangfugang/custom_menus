@@ -1,0 +1,6 @@
+services:
+  custom_menus.general:
+    class: Drupal\custom_menus\Services\GeneralFunctions
+    arguments: ['@menu.link_tree']
+    tags:
+      - { name: custom_menus_general_functions }

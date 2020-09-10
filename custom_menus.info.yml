@@ -1,0 +1,15 @@
+name: Custom Menus
+type: module
+description: '自定义菜单模块.'
+package: Custom
+# version: VERSION
+dependencies:
+  - drupal:link
+  - drupal:menu_ui
+  - paragraphs
+core_version_requirement: ^8|^9
+
+# Information added by Drupal.org packaging script on 2020-06-17
+version: '9.0.1'
+project: 'custom'
+datestamp: 1592417763
